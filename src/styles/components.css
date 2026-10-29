@@ -699,65 +699,31 @@
   isolation: isolate;
 }
 
-.map-card svg {
-  position: absolute;
-  inset: 0;
+.map-frame {
+  display: block;
   width: 100%;
   height: 100%;
+  border: 0;
 }
 
-.map-card .map-pin {
+.map-open {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 36px;
-  height: 36px;
-  margin: -18px 0 0 -18px;
-  border-radius: 50%;
-  background: var(--accent);
-  border: 8px solid var(--ground);
-  box-shadow: 0 2px 12px rgba(31, 26, 23, 0.25);
-}
-
-.map-card .map-pin::after {
-  content: '';
-  position: absolute;
-  inset: -18px;
-  border-radius: 50%;
-  border: 1px solid rgba(47, 74, 58, 0.4);
-  animation: pin-pulse 3s var(--ease) infinite;
-}
-
-@keyframes pin-pulse {
-  0% {
-    transform: scale(0.7);
-    opacity: 0.9;
-  }
-  70%,
-  100% {
-    transform: scale(1.25);
-    opacity: 0;
-  }
-}
-
-.map-label {
-  position: absolute;
-  left: 16px;
-  bottom: 16px;
+  top: 16px;
+  right: 16px;
   z-index: 1;
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  background: rgba(245, 242, 237, 0.92);
+  color: var(--ink);
   font-size: 12px;
   letter-spacing: 0.02em;
-  color: var(--ink);
-  background: rgba(245, 242, 237, 0.86);
-  padding: 6px 10px;
-  border-radius: var(--radius);
+  box-shadow: 0 1px 6px rgba(31, 26, 23, 0.12);
   backdrop-filter: blur(4px);
+  transition: background-color 0.2s var(--ease);
 }
 
-.map-card .map-hit {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
+.map-open:hover {
+  background: var(--ground);
 }
 
 /* Lightbox */
