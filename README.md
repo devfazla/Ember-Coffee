@@ -76,7 +76,7 @@ Contact messages, table reservations, newsletter signups, and client-side errors
 4. Deploy with **Deploy → New deployment → Web app**, keeping **Execute as: Me** and **Who has access: Anyone**. Copy the `/exec` URL.
 5. Copy `.env.example` to `.env.local` and set `VITE_TELEGRAM_PROXY_URL` to that URL and `VITE_TELEGRAM_PROXY_KEY` to the same `PROXY_KEY`.
 
-For GitHub Pages, add the same two values as repository secrets named `TELEGRAM_PROXY_URL` and `TELEGRAM_PROXY_KEY`; the deploy workflow passes them to the build. Opening the deployed `/exec` URL in a browser returns `{"ok":true}` when the proxy is live.
+For GitHub Pages, add the same two values as repository variables named `VITE_TELEGRAM_PROXY_URL` and `VITE_TELEGRAM_PROXY_KEY` under **Settings → Secrets and variables → Actions → Variables**; the deploy workflow passes them to the build. The `/exec` URL returns `{"ok":true}` in a browser when the proxy is live. Both values are public in the bundle by design, so they do not need to be secrets.
 
 Each message includes the originating page, the visitor's city, region, and country from [ipwho.is](https://ipwho.is), and the time in Portland. Runtime errors are reported the same way, with repeats of the same error suppressed for five seconds.
 

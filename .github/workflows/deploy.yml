@@ -37,8 +37,8 @@ jobs:
 
       - name: Build
         env:
-          VITE_TELEGRAM_PROXY_URL: ${{ secrets.TELEGRAM_PROXY_URL }}
-          VITE_TELEGRAM_PROXY_KEY: ${{ secrets.TELEGRAM_PROXY_KEY }}
+          VITE_TELEGRAM_PROXY_URL: ${{ vars.VITE_TELEGRAM_PROXY_URL }}
+          VITE_TELEGRAM_PROXY_KEY: ${{ vars.VITE_TELEGRAM_PROXY_KEY }}
         run: npm run build
 
       - name: Upload artifact
