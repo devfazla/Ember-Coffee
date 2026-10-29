@@ -1,8 +1,8 @@
 # Ember Coffee
 
-A small, image-led website for Ember — a coffee room in Portland, Oregon. Warm photography, generous whitespace, and one clear path to the menu or a table.
+A small, image-led website for Ember, a coffee room in Portland, Oregon. Warm photography, generous whitespace, and one clear path to the menu or a table.
 
-[Live site](https://devfazla.github.io/Ember-Coffee/) · [Fazla Rabbi](https://devfazla.com)
+[Live site](https://ember-coffee.devfazla.com/) · [Fazla Rabbi](https://devfazla.com)
 
 ![Ember Coffee](public/og-image.png)
 
@@ -46,10 +46,10 @@ npm run preview
 
 `npm run build` runs Vite and then `scripts/seo-postbuild.mjs`, which writes route-specific HTML files, `404.html`, and `sitemap.xml` into `dist/`.
 
-Because the production build targets a GitHub Pages project path, preview runs under the base path:
+The site uses a custom domain and is served from the root, so preview runs at:
 
 ```text
-http://localhost:4173/Ember-Coffee/
+http://localhost:4173/
 ```
 
 ## Deployment
@@ -61,9 +61,9 @@ Pushes to `main` trigger [the Pages workflow](.github/workflows/deploy.yml):
 3. Upload `dist/` as a Pages artifact.
 4. Deploy it to GitHub Pages.
 
-In the repository, set **Settings → Pages → Build and deployment → Source** to **GitHub Actions**. The workflow also requests enablement automatically.
+In the repository, set **Settings → Pages → Build and deployment → Source** to **GitHub Actions** and enter `ember-coffee.devfazla.com` under **Custom domain**. The workflow also requests enablement automatically, and `public/CNAME` keeps the domain attached to each deployment.
 
-To deploy under a different repository name or a custom domain, update the default base path in `vite.config.js`, the `siteUrl` constant in `src/data/seo.js`, and the sitemap URL in `public/robots.txt`.
+The workflow builds for the domain root. `actions/configure-pages` handles the Pages setup, while the base path stays `/` in `vite.config.js`. To serve the site from a repository subpath instead, set `BASE_PATH=/Ember-Coffee/` for the build and update the domain references below.
 
 ## SEO
 
@@ -79,7 +79,7 @@ To deploy under a different repository name or a custom domain, update the defau
 
 ```text
 .github/workflows/deploy.yml   GitHub Pages deployment
-public/                        icons, manifest, robots.txt, OG image
+public/                        CNAME, icons, manifest, robots.txt, OG image
 scripts/seo-postbuild.mjs      static route HTML, 404 fallback, sitemap
 scripts/seo-render.mjs         shared head-tag renderer
 src/
@@ -94,10 +94,10 @@ vite.config.js                 base path, React, home-page head injection
 
 ## Editing content
 
-- `src/data/site.js` — address, hours, phone, email, social links, team, timeline, reviews
-- `src/data/menu.js` — menu sections, items, prices, featured items
-- `src/data/seo.js` — page titles, descriptions, canonical URL, structured data
-- `src/assets/images.js` — image imports used across the site
+- `src/data/site.js`: address, hours, phone, email, social links, team, timeline, reviews
+- `src/data/menu.js`: menu sections, items, prices, featured items
+- `src/data/seo.js`: page titles, descriptions, canonical URL, structured data
+- `src/assets/images.js`: image imports used across the site
 
 ## Author
 

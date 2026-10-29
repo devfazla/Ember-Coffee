@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://devfazla.github.io/Ember-Coffee/sitemap.xml
+Sitemap: https://ember-coffee.devfazla.com/sitemap.xml

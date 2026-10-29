@@ -31,7 +31,7 @@ const injectHomeSeo = () => ({
 export default defineConfig(({ command, isPreview }) => ({
   base:
     command === 'build' || isPreview
-      ? normalizeBase(process.env.BASE_PATH || '/Ember-Coffee/')
+      ? normalizeBase(process.env.BASE_PATH || '/')
       : '/',
   plugins: [react(), injectHomeSeo()],
 }));

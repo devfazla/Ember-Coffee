@@ -1,12 +1,12 @@
 import { menuSections } from './menu.js';
 import { site } from './site.js';
 
-export const siteUrl = 'https://devfazla.github.io/Ember-Coffee';
+export const siteUrl = 'https://ember-coffee.devfazla.com';
 export const siteName = 'Ember Coffee';
 export const siteDescription =
   'A small coffee room in Portland: house-roasted coffee, pastries baked every morning, and a quiet table by the window.';
 export const ogImage = `${siteUrl}/og-image.png`;
-export const ogImageAlt = 'Ember Coffee — good coffee, slowly, in a small Portland room';
+export const ogImageAlt = 'Ember Coffee: good coffee, slowly, in a small Portland room';
 export const ogImageWidth = 1200;
 export const ogImageHeight = 630;
 
@@ -21,7 +21,7 @@ export const pageMeta = {
     path: '/',
     label: 'Home',
     pageType: 'WebPage',
-    title: 'Ember Coffee — Small room, good coffee. Portland, OR',
+    title: 'Ember Coffee: Small room, good coffee. Portland, OR',
     description:
       'A small coffee room in Portland: house-roasted coffee, pastries baked every morning, and a quiet table by the window. Open daily, 7 am to 6 pm.',
     robots: indexable,
@@ -37,7 +37,7 @@ export const pageMeta = {
     pageType: 'WebPage',
     title: 'Coffee & Bakery Menu | Ember Coffee',
     description:
-      'Espresso, flat white, pour-over, cold brew, croissants, cardamom buns, and more — the full Ember menu, with prices, baked fresh every morning.',
+      'Espresso, flat white, pour-over, cold brew, croissants, cardamom buns, and more. The full Ember menu, with prices, baked fresh every morning.',
     robots: indexable,
     canonical: pageUrl('/menu'),
     changeFrequency: 'weekly',
