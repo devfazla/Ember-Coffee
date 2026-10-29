@@ -23,7 +23,7 @@ export default function Contact() {
     if (!values.name.trim()) nextErrors.name = 'Enter your name.';
     if (!isEmail(values.email.trim())) nextErrors.email = 'Enter a valid email address.';
     if (values.message.trim().length < 10) {
-      nextErrors.message = 'Tell us a little more — at least 10 characters.';
+      nextErrors.message = 'Tell us a little more (at least 10 characters).';
     }
 
     setErrors(nextErrors);

@@ -27,7 +27,7 @@ export default function Footer() {
     <footer className="site-footer">
       <div className="footer-grid">
         <div>
-          <Link to="/" className="brand" aria-label="Ember — home">
+          <Link to="/" className="brand" aria-label="Ember home">
             Ember
           </Link>
           <div>{site.tagline}</div>
@@ -82,7 +82,7 @@ export default function Footer() {
               <p className="newsletter-status">
                 <Check />
                 <span>
-                  Look for us on Fridays — new roasts, bakes, and the occasional early close.
+                  Look for us on Fridays: new roasts, bakes, and the occasional early close.
                 </span>
               </p>
             </div>

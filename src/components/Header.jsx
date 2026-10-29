@@ -57,7 +57,7 @@ export default function Header() {
     <>
       <header className={`site-header ${scrolled ? 'is-scrolled' : ''}`}>
         <div className="header-inner">
-          <Link to="/" className="brand" aria-label="Ember — home">
+          <Link to="/" className="brand" aria-label="Ember home">
             Ember
           </Link>
 
