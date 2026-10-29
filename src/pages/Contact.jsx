@@ -4,6 +4,7 @@ import { directionsUrl, fullAddress, site } from '../data/site.js';
 import { FormField, Input, Textarea } from '../components/FormField.jsx';
 import Reveal from '../components/Reveal.jsx';
 import { Check } from '../components/icons.jsx';
+import { notify } from '../lib/telegram.js';
 
 const isEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
@@ -11,13 +12,15 @@ export default function Contact() {
   const [values, setValues] = useState({ name: '', email: '', message: '' });
   const [errors, setErrors] = useState({});
   const [sent, setSent] = useState(null);
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState('');
 
   const update = (field) => (event) => {
     setValues((current) => ({ ...current, [field]: event.target.value }));
     if (errors[field]) setErrors((current) => ({ ...current, [field]: undefined }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const nextErrors = {};
     if (!values.name.trim()) nextErrors.name = 'Enter your name.';
@@ -33,11 +36,30 @@ export default function Contact() {
       return;
     }
 
+    setSending(true);
+    setSendError('');
+
+    const delivered = await notify({
+      title: 'New message from the website',
+      fields: [
+        ['Name', values.name],
+        ['Email', values.email],
+      ],
+      body: values.message,
+    });
+
+    setSending(false);
+    if (!delivered) {
+      setSendError(`We could not send your message. Please try again, or email ${site.email}.`);
+      return;
+    }
+
     setSent({ firstName: values.name.trim().split(' ')[0] });
   };
 
   const reset = () => {
     setValues({ name: '', email: '', message: '' });
+    setSendError('');
     setSent(null);
   };
 
@@ -131,9 +153,14 @@ export default function Contact() {
                   error={errors.message}
                 />
               </FormField>
+              {sendError && (
+                <p className="form-error" role="alert">
+                  {sendError}
+                </p>
+              )}
               <div className="form-actions">
-                <button type="submit" className="btn btn--primary">
-                  Send message
+                <button type="submit" className="btn btn--primary" disabled={sending}>
+                  {sending ? 'Sending...' : 'Send message'}
                 </button>
               </div>
             </form>

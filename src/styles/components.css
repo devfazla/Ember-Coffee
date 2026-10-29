@@ -55,6 +55,15 @@
   font-size: 15px;
 }
 
+.btn:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.btn:disabled:active {
+  transform: none;
+}
+
 /* Header */
 .site-header {
   position: sticky;

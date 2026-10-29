@@ -12,6 +12,7 @@ A small, image-led website for Ember, a coffee room in Portland, Oregon. Warm ph
 - Responsive layout with an accessible mobile menu
 - Menu, story/team, contact, and table reservation pages
 - Client-side validation on the contact and reservation forms
+- Telegram notifications for messages, reservations, signups, and client errors
 - Expandable reviews on the home page
 - Live Google Maps embed for the cafe location
 - Per-page SEO, structured data, sitemap, and social cards
@@ -57,13 +58,31 @@ http://localhost:4173/
 Pushes to `main` trigger [the Pages workflow](.github/workflows/deploy.yml):
 
 1. Install dependencies with `npm ci`.
-2. Build with the Pages base path.
+2. Build the site for the domain root, passing the Telegram secrets.
 3. Upload `dist/` as a Pages artifact.
 4. Deploy it to GitHub Pages.
 
 In the repository, set **Settings → Pages → Build and deployment → Source** to **GitHub Actions** and enter `ember-coffee.devfazla.com` under **Custom domain**. The workflow also requests enablement automatically, and `public/CNAME` keeps the domain attached to each deployment.
 
 The workflow builds for the domain root. `actions/configure-pages` handles the Pages setup, while the base path stays `/` in `vite.config.js`. To serve the site from a repository subpath instead, set `BASE_PATH=/Ember-Coffee/` for the build and update the domain references below.
+
+## Notifications
+
+Contact messages, table reservations, newsletter signups, and client-side errors are sent to a Telegram chat through a Google Apps Script proxy. The bot token stays in Apps Script properties, so it never ships to the browser.
+
+1. Create a bot with [@BotFather](https://t.me/BotFather) and copy its token.
+2. Send the bot a message, then read the chat ID from `https://api.telegram.org/bot<token>/getUpdates` (`result[0].message.chat.id`).
+3. Create a project at [script.new](https://script.new), paste [apps-script/telegram-proxy.gs](apps-script/telegram-proxy.gs), and add these under **Project Settings → Script properties**: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, and `PROXY_KEY` (any long random string).
+4. Deploy with **Deploy → New deployment → Web app**, keeping **Execute as: Me** and **Who has access: Anyone**. Copy the `/exec` URL.
+5. Copy `.env.example` to `.env.local` and set `VITE_TELEGRAM_PROXY_URL` to that URL and `VITE_TELEGRAM_PROXY_KEY` to the same `PROXY_KEY`.
+
+For GitHub Pages, add the same two values as repository secrets named `TELEGRAM_PROXY_URL` and `TELEGRAM_PROXY_KEY`; the deploy workflow passes them to the build. Opening the deployed `/exec` URL in a browser returns `{"ok":true}` when the proxy is live.
+
+Each message includes the originating page, the visitor's city, region, and country from [ipwho.is](https://ipwho.is), and the time in Portland. Runtime errors are reported the same way, with repeats of the same error suppressed for five seconds.
+
+The proxy checks the shared key and allows 30 messages per hour. The key is compiled into the public bundle, so it only deters casual abuse; Google's URL Fetch quota is the hard backstop. The bot token itself stays server-side. Without the proxy variables the client is a no-op, so the forms still work locally.
+
+Setting `VITE_TELEGRAM_BOT_TOKEN` and `VITE_TELEGRAM_CHAT_ID` instead of a proxy sends straight from the browser. That is handy for a quick local test, but anyone can read the token from the deployed JavaScript, so the workflow never passes those values into a production build.
 
 ## SEO
 
@@ -79,6 +98,7 @@ The workflow builds for the domain root. `actions/configure-pages` handles the P
 
 ```text
 .github/workflows/deploy.yml   GitHub Pages deployment
+apps-script/telegram-proxy.gs  Google Apps Script Telegram proxy
 public/                        CNAME, icons, manifest, robots.txt, OG image
 scripts/seo-postbuild.mjs      static route HTML, 404 fallback, sitemap
 scripts/seo-render.mjs         shared head-tag renderer
@@ -86,6 +106,7 @@ src/
   assets/                      photography and image map
   components/                  layout, header, footer, SEO, cards, forms
   data/                        site details, menu, SEO metadata
+  lib/                         Telegram notification client
   pages/                       Home, Menu, About, Contact, Reserve, NotFound
   styles/                      base, components, pages
 index.html                     entry document with SEO markers

@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { images } from '../assets/images.js';
+import { site } from '../data/site.js';
 import { FormField, Input, Select, Textarea } from '../components/FormField.jsx';
 import Reveal from '../components/Reveal.jsx';
+import { notify } from '../lib/telegram.js';
 
 const times = ['7:00 am', '9:00 am', '11:00 am', '1:00 pm', '3:00 pm', '5:00 pm'];
 const guestCounts = Array.from({ length: 8 }, (_, index) =>
@@ -36,6 +38,8 @@ export default function Reserve() {
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
   const [confirmation, setConfirmation] = useState(null);
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState('');
   const headingRef = useRef(null);
 
   useEffect(() => {
@@ -47,7 +51,7 @@ export default function Reserve() {
     if (errors[field]) setErrors((current) => ({ ...current, [field]: undefined }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const nextErrors = {};
     if (!values.name.trim()) nextErrors.name = 'Enter your name.';
@@ -59,6 +63,28 @@ export default function Reserve() {
     const firstError = Object.keys(nextErrors)[0];
     if (firstError) {
       document.getElementById(`r-${firstError}`)?.focus();
+      return;
+    }
+
+    setSending(true);
+    setSendError('');
+
+    const delivered = await notify({
+      title: 'New table reservation',
+      fields: [
+        ['Name', values.name],
+        ['Email', values.email],
+        ['Date', formatDate(values.date)],
+        ['Time', values.time],
+        ['Guests', values.guests],
+        ['Phone', values.phone],
+        ['Note', values.note],
+      ],
+    });
+
+    setSending(false);
+    if (!delivered) {
+      setSendError(`We could not hold your table. Please try again, or call ${site.phone}.`);
       return;
     }
 
@@ -74,6 +100,7 @@ export default function Reserve() {
   const reset = () => {
     setValues(initialValues);
     setErrors({});
+    setSendError('');
     setConfirmation(null);
   };
 
@@ -185,9 +212,14 @@ export default function Reserve() {
                 />
               </FormField>
             </div>
+            {sendError && (
+              <p className="form-error" role="alert">
+                {sendError}
+              </p>
+            )}
             <div className="form-actions">
-              <button type="submit" className="btn btn--primary">
-                Confirm reservation
+              <button type="submit" className="btn btn--primary" disabled={sending}>
+                {sending ? 'Confirming...' : 'Confirm reservation'}
               </button>
             </div>
           </form>

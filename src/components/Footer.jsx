@@ -2,6 +2,7 @@ import { useId, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { directionsUrl, navItems, site } from '../data/site.js';
 import { Check, socialIcons } from './icons.jsx';
+import { notify } from '../lib/telegram.js';
 
 const isEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
@@ -12,14 +13,31 @@ export default function Footer() {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [sending, setSending] = useState(false);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (!isEmail(email.trim())) {
       setError('Enter a valid email address.');
       return;
     }
     setError('');
+    setSending(true);
+
+    const delivered = await notify({
+      title: 'New newsletter signup',
+      fields: [
+        ['Name', name],
+        ['Email', email],
+      ],
+    });
+
+    setSending(false);
+    if (!delivered) {
+      setError('We could not subscribe you. Please try again.');
+      return;
+    }
+
     setSubscribed(true);
   };
 
@@ -120,8 +138,8 @@ export default function Footer() {
                   </span>
                 )}
               </div>
-              <button type="submit" className="btn btn--light">
-                Subscribe
+              <button type="submit" className="btn btn--light" disabled={sending}>
+                {sending ? 'Subscribing...' : 'Subscribe'}
               </button>
             </form>
           )}
