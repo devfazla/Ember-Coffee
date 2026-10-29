@@ -1,4 +1,4 @@
-import { directionsUrl } from '../data/site.js';
+import { mapUrl } from '../data/site.js';
 
 export default function MapCard() {
   return (
@@ -29,7 +29,7 @@ export default function MapCard() {
       <span className="map-label">Ember · 214 Ash Street</span>
       <a
         className="map-hit"
-        href={directionsUrl}
+        href={mapUrl}
         target="_blank"
         rel="noreferrer"
         aria-label="Open Ember’s location in Google Maps"

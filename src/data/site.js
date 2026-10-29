@@ -20,7 +20,8 @@ export const site = {
 };
 
 export const fullAddress = `${site.address.line1}, ${site.address.line2}`;
-export const directionsUrl =
+export const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddress)}`;
+export const mapUrl =
   'https://www.google.com/maps/place/Ember+Cafe+(Kuching)/@1.5093663,110.3498072,825m/data=!3m1!1e3!4m15!1m8!3m7!1s0x31fba7af32a2613f:0x89c882fd246005e7!2sEmber+Cafe+(Kuching)!8m2!3d1.5093663!4d110.3523821!10e9!16s%2Fg%2F11sszn0jfb!3m5!1s0x31fba7af32a2613f:0x89c882fd246005e7!8m2!3d1.5093663!4d110.3523821!16s%2Fg%2F11sszn0jfb?entry=ttu';
 
 export const navItems = [
